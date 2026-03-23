@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>巴蜀文物非遗潮玩盲盒Test</title>
+    <title>巴蜀文物非遗潮玩盲盒</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -33,26 +33,67 @@
 
     <!-- 主内容区域 -->
     <main class="main-content">
-        <!-- 英雄区域 -->
+        <!-- 英雄区域 - 海报轮播 -->
         <section class="hero-section">
-            <div class="hero-content">
-                <h1 class="hero-title">探索巴蜀文物<br><span class="highlight">非遗潮玩盲盒</span></h1>
-                <p class="hero-subtitle">三星堆·川剧变脸·蜀绣·熊猫文创<br>亲手设计属于你的文物潮玩！</p>
+            <div class="hero-carousel">
+                <div class="carousel-container">
+                    <!-- 海报1：三星堆 -->
+                    <div class="carousel-slide active">
+                        <img src="photo/三星堆/三星堆.jpg" alt="三星堆青铜文化" class="carousel-img">
+                        <div class="slide-content">
+                            <h1 class="hero-title">神秘三星堆<br><span class="highlight">青铜文明再现</span></h1>
+                            <p class="hero-subtitle">探索古蜀国神秘祭祀文化<br>收藏青铜面具潮玩盲盒</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 海报2：川剧变脸 -->
+                    <div class="carousel-slide">
+                        <img src="photo/川剧变脸.jpg" alt="川剧变脸艺术" class="carousel-img">
+                        <div class="slide-content">
+                            <h1 class="hero-title">川剧变脸<br><span class="highlight">非遗艺术新生</span></h1>
+                            <p class="hero-subtitle">传统脸谱与现代潮玩结合<br>一盒多变，收藏非遗魅力</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 海报3：蜀绣 -->
+                    <div class="carousel-slide">
+                        <img src="photo/蜀绣.png" alt="蜀绣非遗技艺" class="carousel-img">
+                        <div class="slide-content">
+                            <h1 class="hero-title">蜀绣技艺<br><span class="highlight">千年传承创新</span></h1>
+                            <p class="hero-subtitle">中国四大名绣之一<br>精美刺绣图案潮玩收藏</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 海报4：熊猫文创 -->
+                    <div class="carousel-slide">
+                        <img src="photo/熊猫/熊猫.jpg" alt="熊猫文创系列" class="carousel-img">
+                        <div class="slide-content">
+                            <h1 class="hero-title">熊猫文创<br><span class="highlight">国宝守护文物</span></h1>
+                            <p class="hero-subtitle">国宝熊猫化身文物守护者<br>可爱与文化的完美结合</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 控制按钮 -->
+                <button class="carousel-btn prev" aria-label="上一张">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-btn next" aria-label="下一张">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- 指示点 -->
+                <div class="carousel-dots">
+                    <span class="dot active" data-slide="0"></span>
+                    <span class="dot" data-slide="1"></span>
+                    <span class="dot" data-slide="2"></span>
+                    <span class="dot" data-slide="3"></span>
+                </div>
+                
+                <!-- 操作按钮 -->
                 <div class="hero-actions">
                     <a href="#diy" class="btn-primary"><i class="fas fa-magic"></i> 立即DIY</a>
                     <a href="#shop" class="btn-secondary"><i class="fas fa-gift"></i> 购买盲盒</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="blindbox-display">
-                    <div class="blindbox-3d" id="hero-blindbox">
-                        <!-- 3D盲盒将通过JS动态生成 -->
-                        <div class="blindbox-base"></div>
-                        <div class="blindbox-body"></div>
-                        <div class="blindbox-head"></div>
-                        <div class="blindbox-effect"></div>
-                    </div>
-                    <div class="blindbox-label">限量版 · 三星堆青铜系列</div>
                 </div>
             </div>
         </section>
@@ -137,38 +178,22 @@
             </div>
             
             <div class="diy-container">
-                <!-- 3D预览区域 -->
+                <!-- 设计展示区域 -->
                 <div class="diy-preview">
                     <div class="preview-header">
-                        <h3>3D预览</h3>
-                        <div class="preview-controls">
-                            <button class="btn-control" id="rotate-btn"><i class="fas fa-sync-alt"></i> 旋转</button>
-                            <button class="btn-control" id="reset-btn"><i class="fas fa-redo"></i> 重置</button>
-                            <button class="btn-control" id="save-btn"><i class="fas fa-save"></i> 保存</button>
-                        </div>
+                        <h3>设计展示</h3>
                     </div>
                     <div class="preview-area">
-                        <div class="blindbox-3d-container">
-                            <div class="blindbox-3d" id="diy-blindbox">
-                                <!-- 3D模型将通过JS动态构建 -->
-                                <div class="part base-part" data-part="base">
-                                    <div class="part-label">青铜底座</div>
-                                </div>
-                                <div class="part body-part" data-part="body">
-                                    <div class="part-label">神树身体</div>
-                                </div>
-                                <div class="part head-part" data-part="head">
-                                    <div class="part-label">黄金面具</div>
-                                </div>
-                                <div class="part effect-part" data-part="effect">
-                                    <div class="part-label">神秘光效</div>
+                        <div class="design-showcase">
+                            <img src="photo/三维.png" alt="盲盒设计展示" class="design-image">
+                            <div class="design-info">
+                                <h4>三星堆青铜系列设计</h4>
+                                <p>青铜面具 + 神树身体 + 青铜底座 + 神秘光效</p>
+                                <div class="design-tags">
+                                    <span class="design-tag">热门设计</span>
+                                    <span class="design-tag">用户推荐</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="view-controls">
-                            <button class="view-btn active" data-view="front"><i class="fas fa-eye"></i> 正面</button>
-                            <button class="view-btn" data-view="side"><i class="fas fa-arrows-alt-h"></i> 侧面</button>
-                            <button class="view-btn" data-view="top"><i class="fas fa-arrows-alt-v"></i> 俯视</button>
                         </div>
                     </div>
                 </div>
@@ -309,7 +334,7 @@
                 
                 <div class="shop-item">
                     <div class="shop-image">
-                        <img src="" alt="青铜神树" class="shop-img" data-product="sanxingdui-tree">
+                        <img src="photo\IMG_9611.JPG" alt="青铜神树" class="shop-img" data-product="sanxingdui-tree">
                         <div class="shop-badge">典藏</div>
                     </div>
                     <div class="shop-content">
@@ -435,5 +460,6 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="carousel.js"></script>
 </body>
 </html>

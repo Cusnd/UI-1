@@ -90,14 +90,9 @@ function setupNavigation() {
 
 // 初始化DIY功能
 function initDIYFunctionality() {
-    const diyBlindbox = document.getElementById('diy-blindbox');
     const partsContainer = document.getElementById('parts-container');
     const tabButtons = document.querySelectorAll('.tab-btn');
     const colorOptions = document.querySelectorAll('.color-option');
-    const viewButtons = document.querySelectorAll('.view-btn');
-    const rotateBtn = document.getElementById('rotate-btn');
-    const resetBtn = document.getElementById('reset-btn');
-    const saveBtn = document.getElementById('save-btn');
     
     // 当前状态
     let currentState = {
@@ -108,10 +103,7 @@ function initDIYFunctionality() {
             base: 'bronze-base',
             effect: 'mystic-glow'
         },
-        currentColor: 'primary-pink',
-        isRotating: false,
-        rotationAngle: 0,
-        currentView: 'front'
+        currentColor: 'primary-pink'
     };
     
     // 部件数据
@@ -166,273 +158,7 @@ function initDIYFunctionality() {
         const parts = partsData[tab];
         
         parts.forEach(part => {
-            const partElement = document.createElement('div');
-            partElement.className = `part-item ${currentState.selectedParts[tab] === part.id ? 'active' : ''}`;
-            partElement.dataset.partId = part.id;
-            partElement.dataset.partType = tab;
-            
-            partElement.innerHTML = `
-                <div class="part-icon">
-                    <i class="${part.icon}"></i>
-                </div>
-                <div class="part-name">${part.name}</div>
-            `;
-            
-            // 设置颜色
-            partElement.querySelector('.part-icon').style.color = part.color;
-            
-            partElement.addEventListener('click', () => selectPart(tab, part.id));
-            partsContainer.appendChild(partElement);
-        });
-    }
-    
-    // 选择部件
-    function selectPart(type, partId) {
-        currentState.selectedParts[type] = partId;
-        
-        // 更新UI
-        updatePartSelectionUI(type, partId);
-        
-        // 更新3D模型
-        update3DModel();
-        
-        // 显示反馈
-        const partName = partsData[type].find(p => p.id === partId).name;
-        showToast(`已选择${partName}`);
-    }
-    
-    // 更新部件选择UI
-    function updatePartSelectionUI(type, partId) {
-        // 更新部件网格中的active状态
-        document.querySelectorAll('.part-item').forEach(item => {
-            item.classList.remove('active');
-            if (item.dataset.partType === type && item.dataset.partId === partId) {
-                item.classList.add('active');
-            }
-        });
-        
-        // 更新3D预览中的部件标签
-        const partLabel = document.querySelector(`.part[data-part="${type}"] .part-label`);
-        if (partLabel) {
-            const partData = partsData[type].find(p => p.id === partId);
-            partLabel.textContent = partData.name;
-        }
-    }
-    
-    // 更新3D模型
-    function update3DModel() {
-        // 这里可以添加更复杂的3D更新逻辑
-        // 目前只是更新颜色和简单的视觉效果
-        
-        // 应用当前颜色到模型
-        applyColorToModel();
-    }
-    
-    // 应用颜色到模型
-    function applyColorToModel() {
-        const currentColor = colorMap[currentState.currentColor];
-        
-        // 更新所有部件的背景色
-        document.querySelectorAll('.part').forEach(part => {
-            const originalGradient = getComputedStyle(part).backgroundImage;
-            // 这里可以添加更复杂的颜色混合逻辑
-        });
-    }
-    
-    // 切换标签页
-    tabButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const tab = this.dataset.tab;
-            
-            // 更新按钮状态
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // 更新当前标签
-            currentState.selectedTab = tab;
-            
-            // 加载对应部件
-            loadParts(tab);
-        });
-    });
-    
-    // 颜色选择
-    colorOptions.forEach(option => {
-        option.addEventListener('click', function() {
-            const color = this.dataset.color;
-            
-            // 更新颜色选项状态
-            colorOptions.forEach(opt => opt.classList.remove('active'));
-            this.classList.add('active');
-            
-            // 更新当前颜色
-            currentState.currentColor = color;
-            
-            // 应用颜色到模型
-            applyColorToModel();
-            
-            // 显示反馈
-            showToast(`已切换为${getColorName(color)}配色`);
-        });
-    });
-    
-    // 视角切换
-    viewButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const view = this.dataset.view;
-            
-            // 更新按钮状态
-            viewButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-            
-            // 更新当前视角
-            currentState.currentView = view;
-            
-            // 应用视角变换
-            applyViewTransform(view);
-        });
-    });
-    
-    // 应用视角变换
-    function applyViewTransform(view) {
-        let transform = '';
-        
-        switch(view) {
-            case 'front':
-                transform = 'rotateX(0deg) rotateY(0deg)';
-                break;
-            case 'side':
-                transform = 'rotateX(0deg) rotateY(-60deg)';
-                break;
-            case 'top':
-                transform = 'rotateX(-60deg) rotateY(0deg)';
-                break;
-        }
-        
-        diyBlindbox.style.transform = transform;
-    }
-    
-    // 旋转功能
-    if (rotateBtn) {
-        rotateBtn.addEventListener('click', function() {
-            currentState.isRotating = !currentState.isRotating;
-            
-            if (currentState.isRotating) {
-                this.innerHTML = '<i class="fas fa-pause"></i> 暂停';
-                startRotation();
-            } else {
-                this.innerHTML = '<i class="fas fa-sync-alt"></i> 旋转';
-                stopRotation();
-            }
-        });
-    }
-    
-    // 开始旋转
-    function startRotation() {
-        function rotate() {
-            if (currentState.isRotating) {
-                currentState.rotationAngle += 1;
-                diyBlindbox.style.transform = `rotateY(${currentState.rotationAngle}deg)`;
-                requestAnimationFrame(rotate);
-            }
-        }
-        rotate();
-    }
-    
-    // 停止旋转
-    function stopRotation() {
-        // 旋转状态已在点击事件中更新
-    }
-    
-    // 重置功能
-    if (resetBtn) {
-        resetBtn.addEventListener('click', function() {
-            // 重置到默认状态
-            currentState = {
-                selectedTab: 'head',
-                selectedParts: {
-                    head: 'gold-mask',
-                    body: 'divine-tree',
-                    base: 'bronze-base',
-                    effect: 'mystic-glow'
-                },
-                currentColor: 'primary-pink',
-                isRotating: false,
-                rotationAngle: 0,
-                currentView: 'front'
-            };
-            
-            // 重置UI
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.tab-btn[data-tab="head"]').classList.add('active');
-            
-            colorOptions.forEach(opt => opt.classList.remove('active'));
-            document.querySelector('.color-option[data-color="primary-pink"]').classList.add('active');
-            
-            viewButtons.forEach(btn => btn.classList.remove('active'));
-            document.querySelector('.view-btn[data-view="front"]').classList.add('active');
-            
-            // 重新加载部件
-            loadParts('head');
-            
-            // 重置3D模型
-            diyBlindbox.style.transform = 'rotateX(0deg) rotateY(0deg)';
-            update3DModel();
-            
-            showToast('已重置所有设置');
-        });
-    }
-    
-    // 保存功能
-    if (saveBtn) {
-        saveBtn.addEventListener('click', function() {
-            // 模拟保存设计
-            const designName = `巴蜀潮玩设计_${new Date().getTime()}`;
-            
-            // 显示保存成功消息
-            showToast(`设计"${designName}"已保存到我的作品`);
-            
-            // 这里可以添加实际保存逻辑，如发送到服务器或保存到本地存储
-            saveDesignToLocal(designName);
-        });
-    }
-    
-    // 获取颜色名称
-    function getColorName(colorKey) {
-        const names = {
-            'primary-pink': '主粉色',
-            'dark-pink': '深粉色',
-            'light-pink': '浅粉色',
-            'black': '经典黑',
-            'gray': '高级灰',
-            'accent': '点缀金'
-        };
-        return names[colorKey] || colorKey;
-    }
-    
-    // 保存设计到本地存储
-    function saveDesignToLocal(designName) {
-        const design = {
-            name: designName,
-            parts: currentState.selectedParts,
-            color: currentState.currentColor,
-            timestamp: new Date().toISOString()
-        };
-        
-        // 获取现有设计
-        let designs = JSON.parse(localStorage.getItem('bashuDesigns') || '[]');
-        
-        // 添加新设计
-        designs.push(design);
-        
-        // 保存回本地存储
-        localStorage.setItem('bashuDesigns', JSON.stringify(designs));
-    }
-    
-    // 初始化加载
-    loadParts('head');
-    applyViewTransform('front');
-}
+            const partElement =
 
 // 初始化3D动画
 function init3DAnimations() {
@@ -453,6 +179,14 @@ function loadSeriesData() {
 function loadShopData() {
     const shopGrid = document.querySelector('.shop-grid');
     if (!shopGrid) return;
+    
+    // 检查是否已有静态HTML内容
+    const existingItems = shopGrid.querySelectorAll('.shop-item');
+    if (existingItems.length > 0) {
+        // 如果已有静态HTML内容，只需绑定事件
+        bindShopEvents();
+        return;
+    }
     
     // 模拟商品数据
     const products = [
@@ -507,7 +241,29 @@ function loadShopData() {
         shopGrid.appendChild(productElement);
     });
     
+    // 绑定购物车按钮事件
+    bindShopEvents();
+}
+
+// 绑定商城事件
+function bindShopEvents() {
+    // 模拟商品数据（用于购物车功能）
+    const products = [
+        { id: 1, name: '三星堆青铜面具', series: 'sanxingdui', price: '89', rating: 4.9, badge: '热卖' },
+        { id: 2, name: '川剧变脸套装', series: 'bianlian', price: '129', rating: 4.8, badge: '新品' },
+        { id: 3, name: '蜀绣熊猫', series: 'shuxiu', price: '99', rating: 4.7, badge: '限定' },
+        { id: 4, name: '青铜神树', series: 'sanxingdui', price: '159', rating: 4.9, badge: '典藏' },
+        { id: 5, name: '变脸大师', series: 'bianlian', price: '109', rating: 4.8, badge: '新品' },
+        { id: 6, name: '刺绣凤凰', series: 'shuxiu', price: '139', rating: 4.6, badge: '限量' }
+    ];
+    
     // 添加购物车按钮事件
+    document.querySelectorAll('.btn-shop').forEach(button => {
+        // 移除现有的事件监听器（避免重复绑定）
+        button.replaceWith(button.cloneNode(true));
+    });
+    
+    // 重新绑定事件
     document.querySelectorAll('.btn-shop').forEach(button => {
         button.addEventListener('click', function() {
             const productId = this.dataset.productId;
